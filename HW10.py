@@ -30,14 +30,14 @@ class Record:
     def remove_phone(self, phone):
         self.phones = [p for p in self.phones if str(p) != phone]
         
-    def change_phone(self, old_phone, new_phone):   # створив метод для зміни номеру. Спробую додати за імєям  в класі AddressBook   
+    def change_phone(self, old_phone, new_phone):   # створив метод для зміни номеру. Спробую додати зміну за ім'ям  в класі AddressBook   
         for i, phone in enumerate(self.phones):
             if str(phone) == str(old_phone):
                 self.phones[i] = new_phone
                 break
 
     def __str__(self):
-        return f"Name: {self.name}, Phones: {', '.join(str(p) for p in self.phones)}"
+        return f"Name: {self.name}, Phones: {', '.join(str(p) for p in self.phones)}"  #я не впевнений чи потрібен нам тут ось цей метод для перетворення в рядок чи без нього буде просто запис що це класс комірка така то типу клас такий то ? трошки заплутався але зробив по аналогії з вашим прикладом в class Seat (приклад з квитками на футбол). 
     
     
 class AddressBook(UserDict):
@@ -71,7 +71,7 @@ if __name__ == "__main__":
     record2 = Record("Joan")
     record2.add_phone("111222333")
 
-    # Створення адресної книги з обʼєктами record
+    # Створення адресної книги з обʼєктами record (з нашими записами створеними вище)
     address_book = AddressBook()
     address_book.add_record(record1)
     address_book.add_record(record2)
@@ -88,7 +88,7 @@ if __name__ == "__main__":
     # record2.change_phone(Phone("111222333"), Phone("111222000"))
     
     # Зміна номеру за імʼям 
-    address_book.change_phone_by_name("Joan", "123000888")
+    address_book.change_phone_by_name("Joan", "123000999")
 
     # Друк всієї адр книги
     print(address_book)
