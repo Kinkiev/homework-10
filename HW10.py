@@ -2,7 +2,7 @@ from collections import UserDict
 
 
 class Field:
-    def __init__(self, value=None):
+    def __init__(self, value):
         self.value = value
 
     def __str__(self):
@@ -10,19 +10,19 @@ class Field:
    
     
 class Name(Field):
-    def __init__(self, value):
-        super().__init__(value)
+    pass
         
         
 class Phone(Field):
-    def __init__(self, value):
-        super().__init__(value)
+    pass
         
         
 class Record:
-    def __init__(self, name):
+    def __init__(self, name, phone=None):
         self.name = Name(name)
         self.phones = []
+        if phone is not None:
+            self.add_phone(phone)
 
     def add_phone(self, phone):
         self.phones.append(Phone(phone))
@@ -30,14 +30,14 @@ class Record:
     def remove_phone(self, phone):
         self.phones = [p for p in self.phones if str(p) != phone]
         
-    def change_phone(self, old_phone, new_phone):   # створив метод для зміни номеру. Спробую додати зміну за ім'ям  в класі AddressBook   
+    def change_phone(self, old_phone, new_phone):   
         for i, phone in enumerate(self.phones):
             if str(phone) == str(old_phone):
                 self.phones[i] = new_phone
                 break
 
     def __str__(self):
-        return f"Name: {self.name}, Phones: {', '.join(str(p) for p in self.phones)}"  #я не впевнений чи потрібен нам тут ось цей метод для перетворення в рядок чи без нього буде просто запис що це класс комірка така то типу клас такий то ? трошки заплутався але зробив по аналогії з вашим прикладом в class Seat (приклад з квитками на футбол). 
+        return f"Name: {self.name}, Phones: {', '.join(str(p) for p in self.phones)}" 
     
     
 class AddressBook(UserDict):
@@ -54,7 +54,7 @@ class AddressBook(UserDict):
                 results.append(record)
         return results
     
-    def change_phone_by_name(self, name, new_phone):  # намагаюсь зробити метод зміни номеру за імʼям
+    def change_phone_by_name(self, name, new_phone):  
         results = self.search_by_name(name)
         for result in results:
             result.change_phone(result.phones[0], Phone(new_phone))
@@ -62,33 +62,37 @@ class AddressBook(UserDict):
     def __str__(self):
         return "\n".join(str(record) for record in self.data.values())
     
-if __name__ == "__main__":  
-    # створюю записи
-    record1 = Record("Bill")
-    record1.add_phone("123456789")
-    record1.add_phone("987654321")
-
-    record2 = Record("Joan")
-    record2.add_phone("111222333")
-
-    # Створення адресної книги з обʼєктами record (з нашими записами створеними вище)
-    address_book = AddressBook()
-    address_book.add_record(record1)
-    address_book.add_record(record2)
-
-    # Пошук за ім'ям
-    results = address_book.search_by_name("Bill")
-    for result in results:
-        print(result)
-
-    # Видалення запису
-    address_book.remove_record("Bill")
+if __name__ == "__main__":
     
-    # Зміна номеру в записі
-    # record2.change_phone(Phone("111222333"), Phone("111222000"))
+    ab = AddressBook()
+    name = Name("Bill")
+    phone1 = Phone("12345")
+    rec = Record(name, phone1)
+    print(rec.name)
     
-    # Зміна номеру за імʼям 
-    address_book.change_phone_by_name("Joan", "123000999")
-
-    # Друк всієї адр книги
-    print(address_book)
+    ab.add_record(rec)
+    
+    ab.add_record(Record(Name("Jill")))
+    
+    for rec in ab.values():
+        assert isinstance(rec, Record)
+    
+    phone2 = Phone("56784")
+    print(ab)
+        
+    rec = ab["Jill"]
+    print(rec)
+    
+    rec.add_phone(phone2)
+    print(rec)
+    
+    ab.add_record(Record(Name("Jerry")))
+    phone3 = Phone("488447474")
+    rec = ab["Jerry"]
+    rec.add_phone(phone3)
+    
+    rec.change_phone(Phone("488447474"), Phone("99345"))
+    
+    print(ab)
+    
+   
